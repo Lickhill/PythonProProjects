@@ -12,9 +12,9 @@ while True:
 
     proceed = input("Do you wish to continue? (y/n) ")
     if proceed == "n":
-      break
-    else:  
-      clear()
+        break
+    else:
+        clear()
 
 
 max_bid = 0
