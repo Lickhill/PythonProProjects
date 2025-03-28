@@ -1,4 +1,4 @@
-from turtle import Screen
+from turtle import Screen, Turtle
 from dashedline import Dash
 from player import Player
 from playerscore import Playerscore
@@ -8,6 +8,14 @@ import time
 screen = Screen()
 player1score = Playerscore((-100, 220))
 player2score = Playerscore((100, 220))
+
+score_text = Turtle()
+score_text.hideturtle()
+score_text.penup()
+score_text.color("white")  
+score_text.goto(-380, 235)  
+score_text.write("Score:", align="left", font=("Eras Bold ITC", 30, "normal"))
+
 player1 = Player((-350, 0))
 
 # we dont need to make two files for player 1 and player2, we could just make a player file and change the coord in the mian class
@@ -16,7 +24,7 @@ player2 = Player((350, 0))
 
 ball = Ball()
 dash = Dash()
-screen.bgcolor("black")
+screen.bgcolor("red")
 screen.setup(height=600, width=800)
 screen.title("Pong Game")
 screen.tracer(0)
