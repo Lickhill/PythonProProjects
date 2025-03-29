@@ -3,6 +3,7 @@ import mediapipe as mp
 import pyautogui
 import speech_recognition as sr
 import threading
+import time
 
 # Initialize speech recognizer
 recognizer = sr.Recognizer()
@@ -40,7 +41,8 @@ threading.Thread(target=listen_for_commands, daemon=True).start()
 cam = cv2.VideoCapture(0)
 face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
 screen_w, screen_h = pyautogui.size()
-sensitivity = 5.0
+sensitivity = 2.0  # Reduced sensitivity
+pyautogui.PAUSE = 0.1  # Add a small delay between PyAutoGUI actions
 
 while True:
     _, frame = cam.read()
@@ -61,9 +63,12 @@ while True:
                 adj_x = (landmark.x - 0.5) * sensitivity + 0.5
                 adj_y = (landmark.y - 0.5) * sensitivity + 0.5
 
-                screen_x = screen_w * max(0, min(1, adj_x))
-                screen_y = screen_h * max(0, min(1, adj_y))
-                pyautogui.moveTo(screen_x, screen_y)
+                screen_x = max(10, min(screen_w - 10, screen_w * adj_x))
+                screen_y = max(10, min(screen_h - 10, screen_h * adj_y))
+
+                # Implement boundary checking
+                if 10 < screen_x < screen_w - 10 and 10 < screen_y < screen_h - 10:
+                    pyautogui.moveTo(screen_x, screen_y)
 
         left = [landmarks[145], landmarks[159]]
         for landmark in left:
@@ -71,9 +76,9 @@ while True:
             y = int(landmark.y * frame_h)
             cv2.circle(frame, (x, y), 3, (0, 255, 255))
 
-        if (left[0].y - left[1].y) < 0.004:
+        if (left[0].y - left[1].y) < 0.009:
             pyautogui.click()
-            pyautogui.sleep(1)
+            time.sleep(1)  # Use time.sleep instead of pyautogui.sleep
 
     cv2.imshow("Eye Controlled Mouse", frame)
     if cv2.waitKey(1) & 0xFF == ord("q"):
